@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,11 +32,20 @@ public class ProductService {
         return productsList.stream().map(this::mapToProductResponse).toList();
     }
 
+    public void deleteProduct(String id) {
+        Optional<Product> product = productRepository.findById(id);
+        product.ifPresent(productRepository::delete);
+        log.info(("Product Deleted."));
+    }
+
     private ProductResponse mapToProductResponse(Product product) {
         ProductResponse productResponse = new ProductResponse();
         productResponse.setId(product.getId());
         productResponse.setName(product.getName());
-        productResponse.setDescrption(productResponse.getDescrption());
+        productResponse.setDescription(product.getDescription());
+        productResponse.setPrice(product.getPrice());
         return productResponse;
     }
+
+
 }
